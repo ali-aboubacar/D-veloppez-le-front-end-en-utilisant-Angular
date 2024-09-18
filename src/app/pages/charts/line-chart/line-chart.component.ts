@@ -1,9 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { AgCharts } from "ag-charts-angular";
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
 import { IParticipation } from "src/app/core/models/Participation";
 import { OlympicService } from "src/app/core/services/olympic.service";
+
 @Component({
     selector: 'app-line-chart',
     standalone: true,
@@ -14,9 +15,9 @@ import { OlympicService } from "src/app/core/services/olympic.service";
         [options]="chartOptions">
      </ag-charts>`
 })
-export class LineChartComponent {
+export class LineChartComponent{
   private dataToDisplay!: IParticipation[];
-      // Chart Options
+  // Chart Options
   public chartOptions: AgChartOptions;
   constructor(private olympicService: OlympicService) {
     this.olympicService.getCurrentData.subscribe(data => this.dataToDisplay = data.participations);

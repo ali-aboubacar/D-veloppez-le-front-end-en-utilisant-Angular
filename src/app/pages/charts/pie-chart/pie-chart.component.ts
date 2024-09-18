@@ -30,7 +30,6 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
     }
     constructor(private router: Router, private olympicService: OlympicService) {
       this.chartOptions = {
-      
         // Data: Data to be displayed in the chart
         data: this.displayedData,
         // Series: Defines which chart type and data to use
@@ -51,16 +50,19 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 
     private loadChart(): void {
       this.allDataInput.forEach((countryData:IOlympic) => {
+        let totalAthletes = 0;
         let totalMedals = 0;
 
         countryData.participations.forEach((participation:IParticipation) => {
             totalMedals += participation.medalsCount;
+            totalAthletes += participation.athleteCount;
         });
         this.displayedData.push({
             id: countryData.id,
             country: countryData.country,
             participations: countryData.participations,
-            medalsAmount: totalMedals
+            medalsAmount: totalMedals,
+            allAthletes: totalAthletes
         })
       });
     }

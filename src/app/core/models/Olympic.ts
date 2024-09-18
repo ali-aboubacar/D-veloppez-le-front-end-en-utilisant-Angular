@@ -20,5 +20,6 @@ export interface IOlympicDisplay {
     id: number,
     country: string,
     participations: IParticipation[],
-    medalsAmount: number
+    medalsAmount: number,
+    allAthletes: number
 }

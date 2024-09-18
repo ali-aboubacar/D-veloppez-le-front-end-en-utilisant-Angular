@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { IOlympicDisplay } from "src/app/core/models/Olympic";
 import { OlympicService } from "src/app/core/services/olympic.service";
 
 @Component({
@@ -7,7 +8,7 @@ import { OlympicService } from "src/app/core/services/olympic.service";
     styleUrls: ['./single-country.component.scss']
 })
 export class SingleCountryComponent implements OnInit {
-    private singleCountryField: any
+    private singleCountryField!: IOlympicDisplay;
     constructor(private olympicService: OlympicService){
     }
     ngOnInit(): void {

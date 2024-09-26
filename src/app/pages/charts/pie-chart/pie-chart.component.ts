@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Angular Chart Component
@@ -28,6 +28,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
     ngOnInit(): void {
       this.loadChart();
     }
+
     constructor(private router: Router, private olympicService: OlympicService) {
       this.chartOptions = {
         // Data: Data to be displayed in the chart

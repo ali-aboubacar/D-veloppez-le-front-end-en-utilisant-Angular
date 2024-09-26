@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { AgCharts } from "ag-charts-angular";
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
+import { Subject, takeUntil } from "rxjs";
 import { IParticipation } from "src/app/core/models/Participation";
 import { OlympicService } from "src/app/core/services/olympic.service";
 
@@ -15,12 +16,14 @@ import { OlympicService } from "src/app/core/services/olympic.service";
         [options]="chartOptions">
      </ag-charts>`
 })
-export class LineChartComponent{
+export class LineChartComponent implements OnDestroy{
   private dataToDisplay!: IParticipation[];
+  private destroy$ = new Subject<void>();
+
   // Chart Options
   public chartOptions: AgChartOptions;
   constructor(private olympicService: OlympicService) {
-    this.olympicService.getCurrentData.subscribe(data => this.dataToDisplay = data.participations);
+    this.olympicService.getCurrentData.pipe(takeUntil(this.destroy$)).subscribe(data => this.dataToDisplay = data.participations);
     this.chartOptions = {
       // Data: Data to be displayed in the chart
       data: this.dataToDisplay,
@@ -30,5 +33,10 @@ export class LineChartComponent{
         { type: 'line', xKey: 'year', yKey: 'medalsCount', yName: 'Nombre de medaille' },
     ],
     };
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

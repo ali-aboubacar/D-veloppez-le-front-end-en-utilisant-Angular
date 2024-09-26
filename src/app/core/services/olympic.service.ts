@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { IOlympic, IOlympicDisplay } from '../models/Olympic';
+import { ToastService } from './toast.service';
+import { errorType } from '../models/toast';
 
 @Injectable({
   providedIn: 'root',
@@ -12,17 +14,17 @@ export class OlympicService {
   private olympics$ = new BehaviorSubject<any>(undefined);
   private dataToTransfer = new BehaviorSubject<any>(undefined);
   getCurrentData = this.dataToTransfer.asObservable();
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastService: ToastService) {}
 
   loadInitialData() {
     return this.http.get<IOlympic[]>(this.olympicUrl).pipe(
       tap((value) => this.olympics$.next(value)),
-      catchError((error, caught) => {
+      catchError((error) => {
         // TODO: improve error handling
-        console.error(error);
+        this.toastService.showToast(error.message, errorType(error))
         // can be useful to end loading state and let the user know something went wrong
         this.olympics$.next([]);
-        return caught;
+        return [];
       })
     );
   }

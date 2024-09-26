@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { take } from "rxjs";
 import { ToastType } from "src/app/core/models/toast";
 import { ToastService } from "src/app/core/services/toast.service";
 
@@ -12,7 +13,7 @@ export class ToastComponent {
     private toastTypeField: ToastType = 'info'
 
     constructor(private toastService: ToastService){
-        this.toastService.toastEvent.subscribe((data) => {
+        this.toastService.toastEvent.pipe(take(1)).subscribe((data) => {
             this.messageField = data.message;
             this.toastTypeField = data.type
         })

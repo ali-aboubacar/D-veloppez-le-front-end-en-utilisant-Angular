@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { AgCharts } from "ag-charts-angular";
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
@@ -22,8 +23,14 @@ export class LineChartComponent implements OnDestroy{
 
   // Chart Options
   public chartOptions: AgChartOptions;
-  constructor(private olympicService: OlympicService) {
-    this.olympicService.getCurrentData.pipe(takeUntil(this.destroy$)).subscribe(data => this.dataToDisplay = data.participations);
+  constructor(private olympicService: OlympicService, private router: Router) {
+    this.olympicService.getCurrentData.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      if(data.country == ''){
+        this.router.navigate(['notFound'])
+      }else{
+        this.dataToDisplay = data.participations
+      }
+    });
     this.chartOptions = {
       // Data: Data to be displayed in the chart
       data: this.dataToDisplay,

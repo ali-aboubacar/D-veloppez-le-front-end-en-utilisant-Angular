@@ -11,8 +11,8 @@ import { errorType } from '../models/toast';
 })
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
-  private olympics$ = new BehaviorSubject<any>(undefined);
-  private dataToTransfer = new BehaviorSubject<any>(undefined);
+  private olympics$ = new BehaviorSubject<IOlympic[]>([]);
+  private dataToTransfer = new BehaviorSubject<IOlympicDisplay>({ id: 1, country: '', participations: [], medalsAmount: 1, allAthletes: 1 });
   getCurrentData = this.dataToTransfer.asObservable();
   constructor(private http: HttpClient, private toastService: ToastService) {}
 

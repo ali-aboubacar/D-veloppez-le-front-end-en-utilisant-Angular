@@ -1,6 +1,6 @@
 <h2>Olympic games app</h2>
 <hr />
-<p>{{ (olympics$ | async)?.length }} data loaded</p>
+<p *ngIf="olympics$ | async as olypics">{{ (olympics$ | async)?.length }} data loaded</p>
 <div class="headline-wrap">
     <h3>Medals per Country</h3>
     <div class="divider-wrap">
@@ -14,4 +14,4 @@
         </div>
     </div>
 </div>
-<app-pie-chart *ngIf="allData" [allDataInput] = "allData"/>
+<app-pie-chart *ngIf="allData"/>

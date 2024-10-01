@@ -1,5 +1,4 @@
-import { Component } from "@angular/core";
-import { take } from "rxjs";
+import { Component, OnInit } from "@angular/core";
 import { ToastType } from "src/app/core/models/toast";
 import { ToastService } from "src/app/core/services/toast.service";
 
@@ -8,15 +7,18 @@ import { ToastService } from "src/app/core/services/toast.service";
     templateUrl: './toast.component.html',
     styleUrls: ['./toast.component.scss']
 })
-export class ToastComponent {
+export class ToastComponent implements OnInit{
     private messageField: string = '';
     private toastTypeField: ToastType = 'info'
 
     constructor(private toastService: ToastService){
-        this.toastService.toastEvent.pipe(take(1)).subscribe((data) => {
+
+    }
+    ngOnInit(): void {
+        this.toastService.toastEvent.pipe().subscribe((data) => {
             this.messageField = data.message;
             this.toastTypeField = data.type
-        })
+        }) 
     }
 
     public get message(){

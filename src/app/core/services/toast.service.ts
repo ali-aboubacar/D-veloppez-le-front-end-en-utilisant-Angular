@@ -11,7 +11,7 @@ export class ToastService {
         this.toastEvent.emit({message, type})
         setTimeout(() => {
             this.hideToast();
-        }, 3000)
+        },3000)
     }
 
     hideToast(){

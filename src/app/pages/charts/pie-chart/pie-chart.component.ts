@@ -23,13 +23,34 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
     private displayedData: IOlympicDisplay[] = [];
     // Chart Options
     public chartOptions: AgChartOptions;
-    @Input() allDataInput!: IOlympic[];
+    private olympicData!: IOlympic[];
 
     ngOnInit(): void {
-      this.loadChart();
+      this.olympicService.getOlympics().pipe().subscribe(data => {
+        console.log('@@@@@@@@@@',data)
+        data.forEach((countryData:IOlympic) => {
+          let totalAthletes = 0;
+          let totalMedals = 0;
+  
+          countryData.participations.forEach((participation:IParticipation) => {
+              totalMedals += participation.medalsCount;
+              totalAthletes += participation.athleteCount;
+          });
+          this.displayedData.push({
+              id: countryData.id,
+              country: countryData.country,
+              participations: countryData.participations,
+              medalsAmount: totalMedals,
+              allAthletes: totalAthletes
+          })
+        });
+      })
+      // this.loadChart();
+
     }
 
     constructor(private router: Router, private olympicService: OlympicService) {
+
       this.chartOptions = {
         // Data: Data to be displayed in the chart
         data: this.displayedData,
@@ -42,29 +63,30 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
                 listeners: {
                     nodeClick: (event) => {
                       this.olympicService.SetContryData(event.datum)
-                      this.router.navigate([`${event.datum.id}`]);
+                      this.router.navigate([`details/${event.datum.id}`]);
                     }
                 } }
         ]
       };
     }
 
-    private loadChart(): void {
-      this.allDataInput.forEach((countryData:IOlympic) => {
-        let totalAthletes = 0;
-        let totalMedals = 0;
+    // private loadChart(): void {
+    //   this.olympicData.forEach((countryData:IOlympic) => {
+    //     let totalAthletes = 0;
+    //     let totalMedals = 0;
 
-        countryData.participations.forEach((participation:IParticipation) => {
-            totalMedals += participation.medalsCount;
-            totalAthletes += participation.athleteCount;
-        });
-        this.displayedData.push({
-            id: countryData.id,
-            country: countryData.country,
-            participations: countryData.participations,
-            medalsAmount: totalMedals,
-            allAthletes: totalAthletes
-        })
-      });
-    }
+    //     countryData.participations.forEach((participation:IParticipation) => {
+    //         totalMedals += participation.medalsCount;
+    //         totalAthletes += participation.athleteCount;
+    //     });
+    //     this.displayedData.push({
+    //         id: countryData.id,
+    //         country: countryData.country,
+    //         participations: countryData.participations,
+    //         medalsAmount: totalMedals,
+    //         allAthletes: totalAthletes
+    //     })
+    //   });
+
+    // }
   }

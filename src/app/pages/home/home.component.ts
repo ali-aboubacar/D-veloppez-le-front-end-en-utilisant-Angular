@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.olympics$ = this.olympicService.getOlympics();
     this.olympics$.pipe(takeUntil(this.destroy$)).subscribe({
       next: value => {
-        console
         this.allDataField = value
       },
       error: err => console.error(err)

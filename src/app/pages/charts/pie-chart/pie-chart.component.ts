@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AgCharts } from 'ag-charts-angular';
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
+import { Observable, Subject, of, takeUntil } from 'rxjs';
 import { IOlympic, IOlympicDisplay } from 'src/app/core/models/Olympic';
 import { IParticipation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -19,33 +20,21 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
         [options]="chartOptions">
      </ag-charts>`,
   })
-  export class PieChartComponent implements OnInit {
+  export class PieChartComponent implements OnInit, OnDestroy{
     private displayedData: IOlympicDisplay[] = [];
+    private destroy$ = new Subject<void>();
+
     // Chart Options
     public chartOptions: AgChartOptions;
     private olympicData!: IOlympic[];
-
+    public olympics$: Observable<IOlympic[]> = of([]);
     ngOnInit(): void {
-      this.olympicService.getOlympics().pipe().subscribe(data => {
-        console.log('@@@@@@@@@@',data)
-        data.forEach((countryData:IOlympic) => {
-          let totalAthletes = 0;
-          let totalMedals = 0;
-  
-          countryData.participations.forEach((participation:IParticipation) => {
-              totalMedals += participation.medalsCount;
-              totalAthletes += participation.athleteCount;
-          });
-          this.displayedData.push({
-              id: countryData.id,
-              country: countryData.country,
-              participations: countryData.participations,
-              medalsAmount: totalMedals,
-              allAthletes: totalAthletes
-          })
-        });
+      this.olympics$ = this.olympicService.getOlympics();
+      this.olympics$.pipe(takeUntil(this.destroy$)).subscribe(data => {
+        this.olympicData = data
+        console.log('^^^^^^^^^^^',this.olympicData);
+        this.loadChart();
       })
-      // this.loadChart();
 
     }
 
@@ -70,23 +59,28 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
       };
     }
 
-    // private loadChart(): void {
-    //   this.olympicData.forEach((countryData:IOlympic) => {
-    //     let totalAthletes = 0;
-    //     let totalMedals = 0;
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
+  
+    private loadChart(): void {
+      this.olympicData.forEach((countryData:IOlympic) => {
+        let totalAthletes = 0;
+        let totalMedals = 0;
 
-    //     countryData.participations.forEach((participation:IParticipation) => {
-    //         totalMedals += participation.medalsCount;
-    //         totalAthletes += participation.athleteCount;
-    //     });
-    //     this.displayedData.push({
-    //         id: countryData.id,
-    //         country: countryData.country,
-    //         participations: countryData.participations,
-    //         medalsAmount: totalMedals,
-    //         allAthletes: totalAthletes
-    //     })
-    //   });
+        countryData.participations.forEach((participation:IParticipation) => {
+            totalMedals += participation.medalsCount;
+            totalAthletes += participation.athleteCount;
+        });
+        this.displayedData.push({
+            id: countryData.id,
+            country: countryData.country,
+            participations: countryData.participations,
+            medalsAmount: totalMedals,
+            allAthletes: totalAthletes
+        })
+      });
 
-    // }
+    }
   }

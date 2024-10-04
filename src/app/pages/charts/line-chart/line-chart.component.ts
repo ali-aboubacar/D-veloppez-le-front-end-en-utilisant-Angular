@@ -18,17 +18,17 @@ import { OlympicService } from "src/app/core/services/olympic.service";
      </ag-charts>`
 })
 export class LineChartComponent implements OnDestroy{
-  private dataToDisplay!: IParticipation[];
+  private dataToDisplay!: IParticipation[] | undefined;
   private destroy$ = new Subject<void>();
 
   // Chart Options
   public chartOptions: AgChartOptions;
   constructor(private olympicService: OlympicService, private router: Router) {
     this.olympicService.getCurrentData.pipe(takeUntil(this.destroy$)).subscribe(data => {
-      if(data.country == ''){
+      if(!data){
         this.router.navigate(['notFound'])
       }else{
-        this.dataToDisplay = data.participations
+        this.dataToDisplay = data?.participations
       }
     });
     this.chartOptions = {

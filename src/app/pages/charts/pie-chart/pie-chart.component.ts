@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AgCharts } from 'ag-charts-angular';
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
-import { Observable, Subject, of, takeUntil } from 'rxjs';
+import { Observable, Subject, of, shareReplay, takeUntil } from 'rxjs';
 import { IOlympic, IOlympicDisplay } from 'src/app/core/models/Olympic';
 import { IParticipation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -20,48 +20,23 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
         [options]="chartOptions">
      </ag-charts>`,
   })
-  export class PieChartComponent implements OnInit, OnDestroy{
+  export class PieChartComponent implements OnInit{
     private displayedData: IOlympicDisplay[] = [];
-    private destroy$ = new Subject<void>();
 
     // Chart Options
-    public chartOptions: AgChartOptions;
+    public chartOptions!: AgChartOptions;
     private olympicData!: IOlympic[];
     public olympics$: Observable<IOlympic[]> = of([]);
     ngOnInit(): void {
       this.olympics$ = this.olympicService.getOlympics();
-      this.olympics$.pipe(takeUntil(this.destroy$)).subscribe(data => {
+      this.olympics$.pipe().subscribe(data => {
         this.olympicData = data
-        console.log('^^^^^^^^^^^',this.olympicData);
         this.loadChart();
-      })
-
+      });
     }
 
     constructor(private router: Router, private olympicService: OlympicService) {
 
-      this.chartOptions = {
-        // Data: Data to be displayed in the chart
-        data: this.displayedData,
-        // Series: Defines which chart type and data to use
-        series: [
-            { 
-                type: 'pie', 
-                angleKey: 'medalsAmount',
-                calloutLabelKey: 'country',
-                listeners: {
-                    nodeClick: (event) => {
-                      this.olympicService.SetContryData(event.datum)
-                      this.router.navigate([`details/${event.datum.id}`]);
-                    }
-                } }
-        ]
-      };
-    }
-
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
     }
   
     private loadChart(): void {
@@ -82,5 +57,22 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
         })
       });
 
+      this.chartOptions = {
+        // Data: Data to be displayed in the chart
+        data: this.displayedData,
+        // Series: Defines which chart type and data to use
+        series: [
+            { 
+                type: 'pie', 
+                angleKey: 'medalsAmount',
+                calloutLabelKey: 'country',
+                listeners: {
+                    nodeClick: (event) => {
+                      this.olympicService.SetContryData(event.datum)
+                      this.router.navigate([`details/${event.datum.id}`]);
+                    }
+                } }
+        ]
+      };
     }
   }

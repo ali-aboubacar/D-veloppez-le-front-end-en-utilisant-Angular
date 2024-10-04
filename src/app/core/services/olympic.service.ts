@@ -12,7 +12,7 @@ import { errorType } from '../models/toast';
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
   private olympics$ = new BehaviorSubject<IOlympic[]>([]);
-  private dataToTransfer = new BehaviorSubject<IOlympicDisplay>({ id: 1, country: '', participations: [], medalsAmount: 1, allAthletes: 1 });
+  private dataToTransfer = new BehaviorSubject<IOlympicDisplay | undefined>(undefined);
   getCurrentData = this.dataToTransfer.asObservable();
   constructor(private http: HttpClient, private toastService: ToastService) {}
 

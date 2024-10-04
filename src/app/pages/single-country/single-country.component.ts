@@ -9,7 +9,7 @@ import { OlympicService } from "src/app/core/services/olympic.service";
     styleUrls: ['./single-country.component.scss']
 })
 export class SingleCountryComponent implements OnInit, OnDestroy {
-    private singleCountryField!: IOlympicDisplay;
+    private singleCountryField!: IOlympicDisplay | undefined;
     private destroy$ = new Subject<void>();
 
     constructor(private olympicService: OlympicService){

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { IOlympic, IOlympicDisplay } from '../models/Olympic';
 import { ToastService } from './toast.service';
 import { errorType } from '../models/toast';
@@ -12,8 +12,6 @@ import { errorType } from '../models/toast';
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
   private olympics$ = new BehaviorSubject<IOlympic[]>([]);
-  private dataToTransfer = new BehaviorSubject<IOlympicDisplay | undefined>(undefined);
-  getCurrentData = this.dataToTransfer.asObservable();
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   loadInitialData() {
@@ -33,7 +31,10 @@ export class OlympicService {
     return this.olympics$.asObservable();
   }
 
-  SetContryData(data: IOlympicDisplay){
-    this.dataToTransfer.next(data)
+  getOlympicById(id: number): Observable<IOlympic | undefined>{
+    return this.olympics$.pipe(
+      filter((olympic: IOlympic[]) => olympic.length > 0 ),
+      map((olympics: IOlympic[]) => olympics.find(olympic => olympic.id === id))
+    )
   }
 }

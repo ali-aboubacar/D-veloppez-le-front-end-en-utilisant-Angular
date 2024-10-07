@@ -1,11 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Angular Chart Component
 import { AgCharts } from 'ag-charts-angular';
 // Chart Options Type Interface
 import { AgChartOptions } from 'ag-charts-community';
-import { Observable, Subject, of, shareReplay, takeUntil } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { IOlympic, IOlympicDisplay } from 'src/app/core/models/Olympic';
 import { IParticipation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -68,7 +68,6 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
                 calloutLabelKey: 'country',
                 listeners: {
                     nodeClick: (event) => {
-                      this.olympicService.SetContryData(event.datum)
                       this.router.navigate([`details/${event.datum.id}`]);
                     }
                 } }

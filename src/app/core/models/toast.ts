@@ -8,7 +8,6 @@ export type ToastType = 'info' | 'success' | 'warning' | 'error';
 export const errorType = (error: { status: number }): ToastType => {
 
     let errorTypeField: ToastType;
-    console.log('@@@',typeof error.status)
     switch(error.status){
       case 400:
          errorTypeField = 'info'

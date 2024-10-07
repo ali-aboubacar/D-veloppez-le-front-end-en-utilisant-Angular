@@ -1,18 +1,18 @@
 <i class="fa fa-arrow-circle-left fa-2xl" aria-hidden="true" [routerLink]="['']"></i>
 <div class="headline-wrap">
-    <h3>{{singleCountry?.country}}</h3>
+    <h3>{{olympic?.country}}</h3>
     <div class="divider-wrap">
         <div class="custom-style">
             <p>number of entries</p>
-            <h4>{{singleCountry?.participations?.length || 0}}</h4>
+            <h4>{{olympic?.participations?.length || 0}}</h4>
         </div>
         <div class="custom-style">
             <p>Total number medals</p>
-            <h4>{{singleCountry?.medalsAmount || 0}}</h4>
+            <h4>{{totalMedals}}</h4>
         </div>
         <div class="custom-style">
             <p>Total number of athletes</p>
-            <h4>{{singleCountry?.allAthletes || 0}}</h4>
+            <h4>{{totalAtheletes}}</h4>
         </div>
     </div>
 </div>

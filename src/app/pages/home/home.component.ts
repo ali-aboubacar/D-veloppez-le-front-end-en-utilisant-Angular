@@ -11,6 +11,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 export class HomeComponent implements OnInit, OnDestroy {
   public olympics$: Observable<IOlympic[]> = of([]);
   private destroy$ = new Subject<void>();
+  private numberOfJoField!: number;
   private allDataField!: IOlympic[];
   constructor(private olympicService: OlympicService) {}
 
@@ -18,7 +19,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.olympics$ = this.olympicService.getOlympics();
     this.olympics$.pipe(takeUntil(this.destroy$)).subscribe({
       next: value => {
+        this.numberOfJoField = 0
         this.allDataField = value
+        this.allDataField.forEach((x:IOlympic) => {
+          if(x.participations.length > this.numberOfJoField){
+            this.numberOfJoField = x.participations.length
+          }
+        })
       },
       error: err => console.error(err)
     })
@@ -29,6 +36,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  public get numberOfJo(): number{
+    return this.numberOfJoField;
+  }
   public get allData(): IOlympic[]{
     return this.allDataField
   }

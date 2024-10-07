@@ -50,7 +50,6 @@ export class LineChartComponent implements OnInit,OnDestroy{
             data: this.dataToDisplay,
             // Series: Defines which chart type and data to use
             series: [
-              { type: 'line', xKey: 'year', yKey: 'athleteCount', yName: "Nombre d'athletes" },
               { type: 'line', xKey: 'year', yKey: 'medalsCount', yName: 'Nombre de medaille' },
           ],
           };
